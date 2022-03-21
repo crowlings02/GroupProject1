@@ -22,3 +22,5 @@ function [colorArray] = getColorArray(image, bbox)
             end    
     end
 end
+
+

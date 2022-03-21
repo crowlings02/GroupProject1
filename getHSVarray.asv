@@ -1,0 +1,15 @@
+function [HSV_Array] = getHSVarray(color_Array) 
+    
+    % Initialize HSV_Array as a # of columns in the color array x 3 array,
+    % where each row corresponds to the pixel of the image, and the 
+    % three columns correspond to H(row 1), S (row 2), and V(row 3). 
+    HSV_Array = zeros(size(color_Array,2),3);
+
+    %Loop through 
+    for i = 1:size(HSV_Array,1)
+        HSV_Array(i) = rgb2hsv(color_Array(:,i)'); 
+    end
+
+    HSV_Array(:,1) = HSV_Array(:,1).*360;
+
+end

@@ -14,10 +14,13 @@ function [colorArray] = getColorArray(image, bbox)
             
         %For each color channel (row of new color array)
             for channel = 1 : 3 
-                colorArray(channel,c-bbox(1)+1) = image(bbox(2)+bbox(4),c,channel); %store RGB of pixel in last row (height) at each column 
-            end
-            
+                % Make sure color array iterates from 1-width, not the corresponding image column location
+                colorCol = c-bbox(1)+1; 
+                
+                %Store RGB of pixel in last row (y pos + height) of corresponding image columns
+                colorArray(channel,colorCol) = double(image(bbox(2)+bbox(4),c,channel))/255; 
+            end    
     end
-% imgexample = [1, bbox(1):bbox(3), bbox(2):bbox(4)]
-%     imagesc(
 end
+
+
