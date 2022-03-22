@@ -21,11 +21,16 @@ title('Detected upper bodies');
 % Store matrix of colors of each pixel from the bottom row of the upper body bounding box
 colorArray = getColorArray(Image,bboxBody);
 
+
+
+
+
+
+
 % Store HSV conversions of RBG color array
 hsv_array = getHSVarray(colorArray);
 
-% Create array to store names of colors 
-%% TODO: Initialize with given size since we know how long it will be?
+% Create array to store names of colors
 ColorNameArray = [];
 
 % Loop through... 
@@ -39,7 +44,7 @@ for rx = 1:size(hsv_array, 1)
         color_name = 'Gray'; % Gray: below 15% Sat, value between 10 and 90%
     
     elseif hsv_array(rx, 2) <= .15 && hsv_array(rx, 3) > .9
-        color_name = 'White'; % White: below 15% Sat and above 90% value
+        color_name = 'White';
     
     % Check for different colors using hue
     elseif hsv_array(rx, 1) >= 0 && hsv_array(rx, 1) < 25 % 0 to 25 red
@@ -70,7 +75,6 @@ for rx = 1:size(hsv_array, 1)
         color_Name = 'Red';
     end  
     
-    % whatver
     ColorNameArray = [ColorNameArray, color_name];
 
 end
