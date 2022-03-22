@@ -9,7 +9,7 @@ function [HSV_Array] = getHSVarray(color_Array)
     for i = 1:size(HSV_Array,1)
         %Set each row as the HSV value converted from the given RGB (represented by any
         %given column in the color_Array)
-        HSV_Array(i) = rgb2hsv(color_Array(:,i)'); 
+        HSV_Array(i,:) = rgb2hsv(color_Array(:,i)'); 
     end
 
     % Multiply each H (hue) value (given by the first column) by 360 to get

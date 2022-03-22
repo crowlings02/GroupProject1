@@ -18,12 +18,12 @@ title('Detected upper bodies');
 %% Color Determination
 
 % Store matrix of colors of each pixel from the bottom row of the upper body bounding box
-colorArray = getColorArray(I2,bboxBody);
+colorArray = getColorArray(Image,bboxBody);
 
 
 
-figure
-displaycolorpatches(colorArray')
+% figure
+% displaycolorpatches(colorArray')
 
 %   Columns 1 through 8
 %    1'red' 2'green' 3'blue' '4neutral' 5'pastel' 6'yellow' 7'flesh' 8'cyan'
@@ -43,7 +43,7 @@ displaycolorpatches(colorArray')
 % Gray: below 15% Sat, value between 10 and 90%
 % White: below 15% Sat and above 90% value
 
-hsv_array = getHSVarray(colorArray);
+hsv_array = getHSVarray(colorArray)
 
 ColorNameArray = [];
 for rx = 1:size(hsv_array, 1)
