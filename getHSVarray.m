@@ -1,4 +1,6 @@
 function [HSV_Array] = getHSVarray(color_Array) 
+% This function was written by Caitlin and debugged by both Alexis and 
+% Caitlin. It took 2 hours to write and 2 hours to debug.
     
     % Initialize HSV_Array as a # of columns in the color array x 3 array,
     % where each row corresponds to the pixel of the image, and the 

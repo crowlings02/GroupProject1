@@ -1,7 +1,6 @@
 function [colorArray] = getColorArray(image, bbox)
 % This function was written by Caitlin and debugged by both Alexis and 
-% Caitlin. It took 2 hours to write and 3 hours to debug.
-
+% Caitlin. It took 2 hours to write and debug 
 % getColorArray takes in an image, and the bounding box of the upper body
 % detected and returns a matrix representing the colors of the last row of the bounding box.
 

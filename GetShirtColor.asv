@@ -1,8 +1,9 @@
 %% Upper Body Detection
 %% Body Detection
 % This section of code was written by both Caitlin & Alexis based on the
-% Matlab computer vision toolbox. The  written code took x hours, with x
-% hours of debugging 
+% Matlab computer vision toolbox. Finding this toolbox and algorithm took 
+% 3 hours. Doing the written code itself took 1 hour, with not a
+% significant amount of time of debugging.
 
 %Initialize body detector 
 bodyDetector = vision.CascadeObjectDetector('UpperBody'); 
@@ -10,7 +11,7 @@ bodyDetector.MinSize = [60 60];
 bodyDetector.MergeThreshold = 10;
 
 %Read image and run detector, storing bounding box of the upper body
-Image = imread('person.jpg');
+Image = imread('stripe shirt.jpg');
 bboxBody = bodyDetector(Image);
 
 % Label bounding box and show image
@@ -20,6 +21,11 @@ imshow(IBody)
 title('Detected upper bodies');
 
 %% Color Determination
+% This section was worked on by both Alexis and Caitlin. Caitlin was 
+% responsible for the getColorArray, getHSVarray functions 
+% while Alexis was responsible for the rest of the code. See functions for
+% hour details. The non-function code took 3 hours to code and another 3 to
+% debug, since we transferred from RGB to HSV.
 
 % Store matrix of colors of each pixel from the bottom row of the upper body bounding box
 colorArray = getColorArray(Image,bboxBody);
@@ -72,12 +78,13 @@ for rx = 1:size(hsv_array, 1)
         color_name = 4;
     end  
     
-    % 
+    % Store 'color names' by numerical assignment corresponding to color
+    % positions created below
     colorNameArray = [colorNameArray, color_name];
-
 end
 
 %% Find Most Frequent Colors 
+% This section of code was 
 
 % Vector that stores frequency of each color corresponding to color_positions (see below)
 count_color = zeros(1,11);
@@ -86,27 +93,36 @@ count_color = zeros(1,11);
 for ii = 1:size(colorNameArray, 2)
     if colorNameArray(ii) == 1
         count_color(1) = count_color(1) + 1;
+    
     elseif colorNameArray(ii) == 2
         count_color(2) = count_color(2) + 1;
+    
     elseif colorNameArray(ii) == 3
         count_color(3) = count_color(3) + 1;
+    
     elseif colorNameArray(ii) == 4
         count_color(4) = count_color(4) + 1;
+    
     elseif colorNameArray(ii) == 5
         count_color(5) = count_color(5) + 1;
+    
     elseif colorNameArray(ii) == 6
         count_color(6) = count_color(6) + 1;
+    
     elseif colorNameArray(ii) == 7
         count_color(7) = count_color(7) + 1;
+    
     elseif colorNameArray(ii) == 8
         count_color(8) = count_color(8) + 1;
+    
     elseif colorNameArray(ii) == 9
         count_color(9) = count_color(9) + 1;
+    
     elseif colorNameArray(ii) == 10
         count_color(10) = count_color(10) + 1;
+    
     elseif colorNameArray(ii) == 11
-        count_color(11) = count_color(11) + 1;
-        
+        count_color(11) = count_color(11) + 1;  
     end
 end
 
@@ -119,39 +135,25 @@ for jj = 2:11
    end
 end
 
-% Find secondary maximum color
-max2 = 0;
-for jj = 1:10
-    % If color frequency is less than first maximum, but greater than
-    % previous color, reset 2nd maximum
-    if count_color(jj)< max && count_color(jj+1) > count_color(jj)
-        max2 = count_color(jj+1);
-    end
-end
-
 % Create vector of colors that tie for highest frequency (max & max2)
 max_index = [];
-max2_index = [];
 
 % Creates new vector that stores frequencies of each color that matches max
 % frequency (and 2nd max)
 for kk = 1:11
     if count_color(kk) == max
         max_index = [max_index kk];
-        for kk = 1:11
-        if count_color(kk) == max2
-            max2_index = [max2_index kk];
-        end
     end
 end
+    
+
 
 %% Create output message
 
 message = '';
-message2 = '';
 
 % Vector storing color positions in their specified indices
-color_positions = ["Black" "Gray" "White" "Red" "Orange" "Yellow" "Green" "Cyan" "Blue" "Purple" "Pink"];
+color_positions = ["black" "gray" "white" "red" "orange" "yellow" "green" "cyan" "blue" "purple" "pink"];
 
 % First message for most prominent color(s) 
 for mm = 1:size(max_index, 2)
@@ -165,19 +167,7 @@ for mm = 1:size(max_index, 2)
     end
 end
 
-% Second message for second most prominent color(s) 
-for m2 = 1:size(max2_index, 2)
-    % Add color to message
-    if m2==size(max2_index, 2)
-        message2 = strcat(message2, color_positions(max2_index(m2)));
-    
-    % Only add "and" and second color in case of a tie
-    else
-        message2 = strcat(color_positions(max2_index(m2)), 'and ');
-    end
-end
-
 % Create final message output
-final_message = strcat('The most prominent shirt color(s) is/are ', message, {' '}, 'and the second most prominent shirt color(s) is/are', {' '}, message2)
-disp(final_message)
+final_message = strcat('The most prominent shirt color(s) is/are ', {' '}, message);
+disp(final_message);
 

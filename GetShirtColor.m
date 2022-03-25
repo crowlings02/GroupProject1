@@ -1,8 +1,9 @@
 %% Upper Body Detection
 %% Body Detection
 % This section of code was written by both Caitlin & Alexis based on the
-% Matlab computer vision toolbox. The  written code took x hours, with x
-% hours of debugging 
+% Matlab computer vision toolbox. Finding this toolbox and algorithm took 
+% 3 hours. Doing the written code itself took 1 hour, with not a
+% significant amount of time of debugging.
 
 %Initialize body detector 
 bodyDetector = vision.CascadeObjectDetector('UpperBody'); 
@@ -10,7 +11,7 @@ bodyDetector.MinSize = [60 60];
 bodyDetector.MergeThreshold = 10;
 
 %Read image and run detector, storing bounding box of the upper body
-Image = imread('stripe shirt.jpg');
+Image = imread('stripeShirt.jpg');
 bboxBody = bodyDetector(Image);
 
 % Label bounding box and show image
@@ -20,6 +21,11 @@ imshow(IBody)
 title('Detected upper bodies');
 
 %% Color Determination
+% This section was worked on by both Alexis and Caitlin. Caitlin was 
+% responsible for the getColorArray, getHSVarray functions 
+% while Alexis was responsible for the rest of the code. See functions for
+% hour details. The non-function code took 3 hours to code and another 3 to
+% debug, since we transferred from RGB to HSV.
 
 % Store matrix of colors of each pixel from the bottom row of the upper body bounding box
 colorArray = getColorArray(Image,bboxBody);
@@ -72,12 +78,15 @@ for rx = 1:size(hsv_array, 1)
         color_name = 4;
     end  
     
-    % 
+    % Store 'color names' by numerical assignment corresponding to color
+    % positions created below
     colorNameArray = [colorNameArray, color_name];
-
 end
 
 %% Find Most Frequent Colors 
+% This section of code was written by Alexis and debugged by both Caitlin
+% and Alexis. Writing the code itself took 3 hours, with 3 hours of
+% debugging due to various issues of sorting strings and characters.
 
 % Vector that stores frequency of each color corresponding to color_positions (see below)
 count_color = zeros(1,11);
@@ -86,27 +95,36 @@ count_color = zeros(1,11);
 for ii = 1:size(colorNameArray, 2)
     if colorNameArray(ii) == 1
         count_color(1) = count_color(1) + 1;
+    
     elseif colorNameArray(ii) == 2
         count_color(2) = count_color(2) + 1;
+    
     elseif colorNameArray(ii) == 3
         count_color(3) = count_color(3) + 1;
+    
     elseif colorNameArray(ii) == 4
         count_color(4) = count_color(4) + 1;
+    
     elseif colorNameArray(ii) == 5
         count_color(5) = count_color(5) + 1;
+    
     elseif colorNameArray(ii) == 6
         count_color(6) = count_color(6) + 1;
+    
     elseif colorNameArray(ii) == 7
         count_color(7) = count_color(7) + 1;
+    
     elseif colorNameArray(ii) == 8
         count_color(8) = count_color(8) + 1;
+    
     elseif colorNameArray(ii) == 9
         count_color(9) = count_color(9) + 1;
+    
     elseif colorNameArray(ii) == 10
         count_color(10) = count_color(10) + 1;
+    
     elseif colorNameArray(ii) == 11
-        count_color(11) = count_color(11) + 1;
-        
+        count_color(11) = count_color(11) + 1;  
     end
 end
 
@@ -118,7 +136,6 @@ for jj = 2:11
         max = count_color(jj); % cant set max = index just in case there is a tie
    end
 end
-
 
 % Create vector of colors that tie for highest frequency (max & max2)
 max_index = [];
@@ -134,6 +151,8 @@ end
 
 
 %% Create output message
+% This section was written by Alexis and debugged by both Caitlin and
+% Alexis. It took 1 hour to code and an hour to debug.
 
 message = '';
 
