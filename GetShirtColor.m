@@ -1,5 +1,8 @@
 %% Upper Body Detection
 %% Body Detection
+% This section of code was written by both Caitlin & Alexis based on the
+% Matlab computer vision toolbox. The  written code took x hours, with x
+% hours of debugging 
 
 %Initialize body detector 
 bodyDetector = vision.CascadeObjectDetector('UpperBody'); 
@@ -7,7 +10,7 @@ bodyDetector.MinSize = [60 60];
 bodyDetector.MergeThreshold = 10;
 
 %Read image and run detector, storing bounding box of the upper body
-Image = imread('person.jpg');
+Image = imread('stripe shirt.jpg');
 bboxBody = bodyDetector(Image);
 
 % Label bounding box and show image
@@ -25,53 +28,131 @@ colorArray = getColorArray(Image,bboxBody);
 hsv_array = getHSVarray(colorArray);
 
 % Create array to store names of colors 
-%% TODO: Initialize with given size since we know how long it will be?
-ColorNameArray = [];
+colorNameArray = [];
 
 % Loop through... 
 for rx = 1:size(hsv_array, 1)
     
     % Check for Black, Gray, White with saturation and value
     if hsv_array(rx, 3) <= .1 
-        color_name = 'Black'; % Black: value is 10% or below
+        color_name = 1; % Black: value is 10% or below
     
     elseif hsv_array(rx, 2) <= .15 && hsv_array(rx, 3) >= .1 && hsv_array(rx, 3) <= .9
-        color_name = 'Gray'; % Gray: below 15% Sat, value between 10 and 90%
+        color_name = 2; % Gray: below 15% Sat, value between 10 and 90%
     
     elseif hsv_array(rx, 2) <= .15 && hsv_array(rx, 3) > .9
-        color_name = 'White'; % White: below 15% Sat and above 90% value
+        color_name = 3; % White: below 15% Sat and above 90% value
     
     % Check for different colors using hue
     elseif hsv_array(rx, 1) >= 0 && hsv_array(rx, 1) < 25 % 0 to 25 red
-        color_name = 'Red';
+        color_name = 4;
     
     elseif hsv_array(rx, 1) >= 25 && hsv_array(rx, 1) < 45 % 25 to 45 orange
-        color_name = 'Orange';
+        color_name = 5;
    
     elseif hsv_array(rx, 1) >= 45 && hsv_array(rx, 1) < 65 % 45 to 65 yellow
-        color_name = 'Yellow';
+        color_name = 6;
     
     elseif hsv_array(rx, 1) >= 65 && hsv_array(rx, 1) < 170 % 65 to 170 green
-        color_name = 'Green';
+        color_name = 7;
     
     elseif hsv_array(rx, 1) >= 170 && hsv_array(rx, 1) < 190 % 170 to 190 cyan
-        color_name = 'Cyan';
+        color_name = 8;
     
     elseif hsv_array(rx, 1) >= 190 && hsv_array(rx, 1) < 260 % 190 to 260 blue
-        color_name = 'Blue';
+        color_name = 9;
     
     elseif hsv_array(rx, 1) >= 260 && hsv_array(rx, 1) < 290 % 260 to 290 purple
-        color_name = 'Purple';
+        color_name = 10;
     
     elseif hsv_array(rx, 1) >= 290 && hsv_array(rx, 1) <= 340 % 290 to 340 pink
-        color_name = 'Pink';
+        color_name = 11;
     
     elseif hsv_array(rx, 1) > 340 && hsv_array(rx, 1) <= 360 % 340 to 360 red
-        color_Name = 'Red';
+        color_name = 4;
     end  
     
-    % whatver
-    ColorNameArray = [ColorNameArray, color_name];
+    % 
+    colorNameArray = [colorNameArray, color_name];
 
 end
+
+%% Find Most Frequent Colors 
+
+% Vector that stores frequency of each color corresponding to color_positions (see below)
+count_color = zeros(1,11);
+
+%Increment color frequencies by each color value in color array
+for ii = 1:size(colorNameArray, 2)
+    if colorNameArray(ii) == 1
+        count_color(1) = count_color(1) + 1;
+    elseif colorNameArray(ii) == 2
+        count_color(2) = count_color(2) + 1;
+    elseif colorNameArray(ii) == 3
+        count_color(3) = count_color(3) + 1;
+    elseif colorNameArray(ii) == 4
+        count_color(4) = count_color(4) + 1;
+    elseif colorNameArray(ii) == 5
+        count_color(5) = count_color(5) + 1;
+    elseif colorNameArray(ii) == 6
+        count_color(6) = count_color(6) + 1;
+    elseif colorNameArray(ii) == 7
+        count_color(7) = count_color(7) + 1;
+    elseif colorNameArray(ii) == 8
+        count_color(8) = count_color(8) + 1;
+    elseif colorNameArray(ii) == 9
+        count_color(9) = count_color(9) + 1;
+    elseif colorNameArray(ii) == 10
+        count_color(10) = count_color(10) + 1;
+    elseif colorNameArray(ii) == 11
+        count_color(11) = count_color(11) + 1;
+        
+    end
+end
+
+%Find first maximum color
+max = count_color(1);
+%if current greater than previoius, reset max # of color occurences
+for jj = 2:11
+   if count_color(jj) > max
+        max = count_color(jj); % cant set max = index just in case there is a tie
+   end
+end
+
+
+% Create vector of colors that tie for highest frequency (max & max2)
+max_index = [];
+
+% Creates new vector that stores frequencies of each color that matches max
+% frequency (and 2nd max)
+for kk = 1:11
+    if count_color(kk) == max
+        max_index = [max_index kk];
+    end
+end
+    
+
+
+%% Create output message
+
+message = '';
+
+% Vector storing color positions in their specified indices
+color_positions = ["black" "gray" "white" "red" "orange" "yellow" "green" "cyan" "blue" "purple" "pink"];
+
+% First message for most prominent color(s) 
+for mm = 1:size(max_index, 2)
+    % Add color to message
+    if mm==size(max_index, 2)
+        message = strcat(message, color_positions(max_index(mm)));
+    
+    % Only add "and" and second color in case of a tie
+    else
+        message = strcat(message, color_positions(max_index(mm)), 'and ');
+    end
+end
+
+% Create final message output
+final_message = strcat('The most prominent shirt color(s) is/are ', {' '}, message);
+disp(final_message);
 
